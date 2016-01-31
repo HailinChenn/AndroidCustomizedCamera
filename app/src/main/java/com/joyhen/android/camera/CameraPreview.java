@@ -8,9 +8,8 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.joyhen.android.AndroidUtil;
-
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by chenhailin on 16/1/28.
@@ -71,19 +70,26 @@ public final class CameraPreview extends SurfaceView implements SurfaceHolder.Ca
 
         // set preview size and make any resize, rotate or
         // reformatting changes here
-        int naturalOrientation = AndroidUtil.getNaturalOrientation((Activity)getContext());
-
-        if (Configuration.ORIENTATION_LANDSCAPE == naturalOrientation) {
-            // natural orientation is landscape.
-            // TODO:This situation should be handled by yourself.
-        }
-        else {
-            // natural orientation is portrait and activity orientation is portrait,
-            // then we need to rotate the camera 90 degree.
-            if (Configuration.ORIENTATION_PORTRAIT == mOrientation) {
-                mCamera.setDisplayOrientation(90);
+        int calcWidth = 0;
+        int calcHeight = 0;
+        Camera.Parameters params = mCamera.getParameters();
+        List<Camera.Size> supportedPreviewSizes = params.getSupportedPreviewSizes();
+        for (Camera.Size s : supportedPreviewSizes) {
+//            Log.d(TAG, "==(" + s.width + "," + s.height + ")");
+            if (s.width <= width && s.height <= height) {
+                if (s.width >= calcWidth && s.height >= calcHeight) {
+                    calcWidth = s.width;
+                    calcHeight = s.height;
+                }
             }
         }
+        Log.d(TAG, "PreviewSize:(" + calcWidth + "," + calcHeight + ")");
+//        params.setPreviewSize(calcWidth, calcHeight);
+        params.setPreviewSize(calcHeight, calcWidth);
+        mCamera.setParameters(params);
+
+
+        CameraUtil.setCameraDisplayOrientation((Activity)getContext(), 0, mCamera);
 
         // start preview with new settings
         try {

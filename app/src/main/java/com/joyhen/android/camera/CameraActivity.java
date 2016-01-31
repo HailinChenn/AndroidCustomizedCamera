@@ -28,7 +28,7 @@ public class CameraActivity extends AppCompatActivity {
 
         setContentView(R.layout.camera);
 
-        mCamera = CameraUtil.getCameraInstance(Camera.CameraInfo.CAMERA_FACING_BACK);
+        mCamera = CameraUtil.getCameraInstance(Camera.CameraInfo.CAMERA_FACING_FRONT);
 
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera, mPreviewCallback, getResources().getConfiguration().orientation);
