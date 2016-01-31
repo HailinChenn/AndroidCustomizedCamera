@@ -1,6 +1,6 @@
 # AndroidCustomizedCamera
 * ##Step One:  
-  You should read the chapter about "android:screenOrientation" in "<activity> element,  
+  You should read the chapter about "android:screenOrientation" in \<activity\> element,  
   [reference url](http://developer.android.com/intl/zh-cn/guide/topics/manifest/activity-element.html)
 
 * >##Step Two:  
