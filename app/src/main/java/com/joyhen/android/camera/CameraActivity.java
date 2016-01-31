@@ -28,6 +28,28 @@ public class CameraActivity extends AppCompatActivity {
 
         setContentView(R.layout.camera);
 
+        createCamera();
+    }
+
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        // we need to create the camera again.
+        createCamera();;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // we need to release the camera.
+        releaseCamera();
+    }
+
+    /**
+     * Create a camera.
+     */
+    private void createCamera() {
         mCamera = CameraUtil.getCameraInstance(Camera.CameraInfo.CAMERA_FACING_FRONT);
 
         // Create our Preview view and set it as the content of our activity.
@@ -36,14 +58,31 @@ public class CameraActivity extends AppCompatActivity {
         preview.addView(mPreview);
     }
 
+
+    /**
+     * Release a camera.
+     */
+    private void releaseCamera() {
+        // If you set a callback previously.
+        mCamera.setPreviewCallback(null);
+        // You must do this, or the app will throws an exception.
+        mCamera.stopPreview();
+        mCamera.release();
+        mCamera = null;
+
+        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+        preview.removeView(mPreview);
+        mPreview = null;
+    }
+
     private int count = 0;
     private Camera.PreviewCallback mPreviewCallback = new Camera.PreviewCallback() {
 
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
-
+            // just for simple test to save image.
             count++;
-            if (count < 100) {
+            if (count < 200) {
                 return;
             }
             count = 0;
